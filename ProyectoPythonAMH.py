@@ -19,7 +19,7 @@ import os
 # para importar archivos
 ruta_base = os.path.dirname(__file__)
 ruta_imagenes = os.path.join(ruta_base, "imagenes")     #importar imagenes
-ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     #importar excel
+ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     
 
 
 # Leer CSV con codificación correcta
