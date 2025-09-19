@@ -18,18 +18,18 @@ import os
 
 # Para importar archivos
 ruta_base = os.path.dirname(__file__)
-ruta_imagenes = os.path.join(ruta_base, "imagenes")     #importar imagenes
-ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     #importar excel
+ruta_imagenes = os.path.join(ruta_base, "imagenes")     # Importar imagenes
+ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     # Importar excel
 
 
-# Leer CSV con codificación correcta
-df_palabras = pd.read_csv(ruta_csv, encoding="latin-1", header=None)  # Sin encabezado
+# Leer CSV 
+df_palabras = pd.read_csv(ruta_csv, encoding="latin-1", header=None)
 palabras_validas = set(df_palabras[0].str.lower()) 
 
 
 palabras_memoria = ["cara", "seda", "iglesia", "carro", "rosa"]
 
-# Inicializar en pagina inicial
+# Empezar en página inicial
 if "page" not in st.session_state:
     st.session_state.page = 1
     
@@ -65,7 +65,7 @@ def siguiente(pagina=None):
 
 
 
-# Página 1: inicio
+# Página 1: Inicio
 if st.session_state.page == 1: 
     st.title("Hola! Bienvenido al :rainbow[Test Cognitivo]🧠")
     st.markdown(
@@ -90,7 +90,7 @@ if st.session_state.page == 1:
         siguiente(2)
 
 
-# Página 2: visoespacial - cuadrado
+# Página 2: Visuoespacial - cuadrado
 elif st.session_state.page == 2:
     st.title("Dominio de visuoespacial🧩: cuadrado⬜")
     st.write("Dibuja un cuadrado 🎨⬜")
@@ -124,7 +124,7 @@ elif st.session_state.page == 2:
             
                 for cnt in contours:
                     area = cv2.contourArea(cnt)
-                    if area < 1500:  # ignorar trazos pequeños
+                    if area < 1500:  # Ignorar trazos pequeños
                         continue
 
                     approx = cv2.approxPolyDP(cnt, 0.02 * cv2.arcLength(cnt, True), True)
@@ -154,7 +154,7 @@ elif st.session_state.page == 2:
         siguiente(3)
 
 
-# Página 3: visoespacial - reloj
+# Página 3: Visuoespacial - reloj
 elif st.session_state.page == 3:
     st.title("Dominio visuoespacial🧩: reloj🕰️")
     st.write("Ejercicio 2: En un reloj, ¿qué número ocupa las siguientes posiciones?")
@@ -186,7 +186,6 @@ elif st.session_state.page == 3:
     hora_correcta1 = "02:55"
     hora_correcta2 = "14:55"
 
-    # Evaluar respuestas
     if st.button("Evaluar hora"):
         if hora1_usuario.strip() == hora1_correcta:
             puntos_viso += 1
@@ -200,7 +199,7 @@ elif st.session_state.page == 3:
         st.session_state.visuoespacial = puntos_viso
         siguiente(4)
         
- # Página 4: nombrado
+ # Página 4: Nombrado
 elif st.session_state.page == 4:
     st.title("Dominio del nombrado🗣️")
     st.write("Identifica los animales que aparecen en las imágenes🐾")
@@ -235,7 +234,7 @@ elif st.session_state.page == 4:
         st.session_state.nombrado = puntos_nom
         siguiente(5)
 
-# Página 5: memoria
+# Página 5: Memoria
 elif st.session_state.page == 5:
     st.title("Dominio de la memoria📝")
     st.write("Recuerda estas 5 palabras:")
@@ -296,7 +295,7 @@ elif st.session_state.page == 6:
         st.session_state.atencion = puntos 
         siguiente(7)
         
-# Página 5.1: memoria recordatorio
+# Página 5.1: Memoria recordatorio
 elif st.session_state.page == 7:
     st.title("Dominio de la memoria📝")
     st.write("Te acuerdas de las palabras que te dije antes?")
@@ -338,14 +337,12 @@ elif st.session_state.page == 8:
     st.write(frase2_correcta)
     frase2_usuario = st.text_input("Frase 2:", key="frase2")
     
-    # Evaluar frases
     puntuacion_frases = 0
     if frase1_usuario == frase1_correcta:
         puntuacion_frases += 1
     if frase2_usuario == frase2_correcta:
         puntuacion_frases += 1
 
-    # Palabras por F
     st.write("Pulsa el botón para mostrar una letra. Tendrás 1 minuto para escribir 12 palabras que empiecen con esa letra.")
     if st.button("Mostrar letra") and st.session_state.start_time_lenguaje is None:
         st.session_state.letra_lenguaje = "F"
@@ -370,7 +367,6 @@ elif st.session_state.page == 8:
         else:
             st.write("Se acabó el tiempo⏰")
 
-        # Evaluar palabras correctas
         puntuacion_palabras = sum(
             1/12 for palabra in palabras_unicas
             if palabra in palabras_validas and palabra.startswith(st.session_state.letra_lenguaje.lower())
@@ -378,12 +374,12 @@ elif st.session_state.page == 8:
 
         st.session_state.lenguaje = puntuacion_frases + puntuacion_palabras
 
-        # Botón para avanzar manualmente ANTES de que acabe el tiempo
+        # Botón para avanzar manualmente antes de que acabe el tiempo
         if st.button("Evaluar y continuar"):
             siguiente(9)
 
         
-# Página 8: Abstraccion
+# Página 8: Abstracción
 elif st.session_state.page == 9:
     st.title("Dominio de la abstracción💡")
     
@@ -403,7 +399,7 @@ elif st.session_state.page == 9:
         siguiente(10)
         
         
-# Página 9: Orientacion
+# Página 9: Orientación
 elif st.session_state.page == 10:
     st.title("Dominio de la orientación📅🧭")
     hoy = datetime.now() 
@@ -421,7 +417,6 @@ elif st.session_state.page == 10:
     mes_actual = meses[hoy.month]
     dia_actual = dias[hoy.weekday()] 
 
-    # Inputs del usuario
     dianum = st.number_input("¿Qué día (número) es hoy?", value=0, key="dia_hoy")
     mes = st.text_input("¿En qué mes estamos (en letras)?", value="", key="mes_hoy")
     año = st.number_input("¿En qué año estamos?", value=0, key="año_hoy")
@@ -451,7 +446,7 @@ elif st.session_state.page == 10:
             st.session_state.orientacion += puntos_or
             siguiente(11)
             
-# Página final: resultados
+# Página final: Resultados
 elif st.session_state.page == 11:
     import matplotlib.pyplot as plt
 
@@ -515,7 +510,6 @@ elif st.session_state.page == 11:
 
     st.pyplot(fig)
 
-    # Interpretación usando la puntuación total real
     total_real = sum(scores.values()) 
     
     st.write("### Interpretación del resultado")
