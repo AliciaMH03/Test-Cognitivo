@@ -11,15 +11,15 @@ import time
 from datetime import datetime
 import requests
 from streamlit_drawable_canvas import st_canvas
-import cv2  # para detectar bordes
+import cv2  # Para detectar bordes
 import os
 
 
 
-# para importar archivos
+# Para importar archivos
 ruta_base = os.path.dirname(__file__)
 ruta_imagenes = os.path.join(ruta_base, "imagenes")     #importar imagenes
-ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     
+ruta_csv = os.path.join(ruta_base, "palabrasF.csv")     #importar excel
 
 
 # Leer CSV con codificación correcta
@@ -179,7 +179,7 @@ elif st.session_state.page == 3:
     hora3_usuario = st.text_input("Número 3: ", value="", key="num_reloj3")
     hora3_correcta = "1"
 
-    # Diapositiva 4: indicar hora completa
+    # Diapositiva 4
     ruta_img4 = os.path.join(ruta_imagenes, "Diapositiva4.png")
     st.image(ruta_img4, width=300)
     hora4_usuario = st.text_input("Escribe la hora que marca el reloj (HH:MM) ", value="", key="hora")
@@ -293,7 +293,7 @@ elif st.session_state.page == 6:
         if numletras == 8:
             puntos += 1
 
-        st.session_state.atencion = puntos #para que al dar a siguiente no se pierda el valor
+        st.session_state.atencion = puntos 
         siguiente(7)
         
 # Página 5.1: memoria recordatorio
@@ -301,8 +301,6 @@ elif st.session_state.page == 7:
     st.title("Dominio de la memoria📝")
     st.write("Te acuerdas de las palabras que te dije antes?")
 
-
-    # Creo inputs para cada palabra, que empiece sin valor, key para diferenciar los widget iguales
     pal1 = st.text_input("Palabra 1:", value="", key="pal1")
     pal2 = st.text_input("Palabra 2:", value="", key="pal2")
     pal3 = st.text_input("Palabra 3:", value="", key="pal3")
@@ -311,7 +309,7 @@ elif st.session_state.page == 7:
 
     if st.button("Evaluar memoria"):
         memoria = 0 
-        # Contar aciertos, lower es para no distinguir entre mayúsculas y minúsculas
+        
         if pal1.lower() == palabras_memoria[0]:
             memoria += 1
         if pal2.lower() == palabras_memoria[1]:
@@ -323,14 +321,13 @@ elif st.session_state.page == 7:
         if pal5.lower() == palabras_memoria[4]:
             memoria += 1
 
-        st.session_state.memoria = memoria #para que al dar a siguiente no se pierda el valor
+        st.session_state.memoria = memoria
         siguiente(8)
         
 # Página 7: Lenguaje
 elif st.session_state.page == 8:
     st.title("Dominio del lenguaje🗨️")
     
-    # Frases a repetir
     st.write("Escribe las siguientes frases exactamente:")
     
     frase1_correcta = "El ejercicio y la buena dieta protegen la mente"
@@ -385,7 +382,6 @@ elif st.session_state.page == 8:
         if st.button("Evaluar y continuar"):
             siguiente(9)
 
-
         
 # Página 8: Abstraccion
 elif st.session_state.page == 9:
@@ -397,7 +393,7 @@ elif st.session_state.page == 9:
     comun2_sol=["redonda", "circular"]
     comun2=st.text_input("¿Qué forma tienen en común una moneda y una rueda de coche?")
         
-    if st.button("Siguiente"): #meto los puntos aquí pq sino el usurario acumula puntos cada vez que refresca
+    if st.button("Siguiente"): 
         puntos_abs = 0
         if comun1.lower() == comun1_sol:
             puntos_abs += 1
@@ -412,7 +408,7 @@ elif st.session_state.page == 10:
     st.title("Dominio de la orientación📅🧭")
     hoy = datetime.now() 
     
-    #lo defino en español porque solo entiende el inglés
+    #Definir en español porque solo entiende el inglés
     meses = {
     1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
     5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
@@ -471,7 +467,7 @@ elif st.session_state.page == 11:
     "Orientacion": st.session_state.orientacion
     }
 
-    #  Máximo de puntos por dominio (ajusta según tu test)
+    # Máximo de puntos por dominio
     max_scores = {
         "Visuoespacial": 5,
         "Nombrado": 3,
@@ -482,10 +478,10 @@ elif st.session_state.page == 11:
         "Orientacion": 6
         }
 
-    # 1) Limitar las puntuaciones a su máximo
+    # Limitar las puntuaciones a su máximo
     scores = {k: max(0, min(int(v), max_scores[k])) for k, v in raw_scores.items()}
 
-    # 2) Crear DataFrame para mostrar sobre 10
+    # Crear DataFrame para mostrar sobre 10
     df_resultados = pd.DataFrame([
         {"Dominio": k, "Puntuación": v, "Máximo": max_scores[k]}
         for k, v in scores.items()
@@ -493,11 +489,11 @@ elif st.session_state.page == 11:
     df_resultados["Sobre 10"] = (df_resultados["Puntuación"] / df_resultados["Máximo"]) * 10
     df_resultados["Sobre 10"] = df_resultados["Sobre 10"].round(1)
     
-    # 3) Mostrar tabla
+    # Mostrar tabla
     st.write("### Tabla de puntuaciones")
     st.dataframe(df_resultados.set_index("Dominio"))
     
-    # 4) Gráfico de barras
+    # Gráfico de barras
     fig, ax = plt.subplots(figsize=(10, 6))
     colores = []
     for v in df_resultados["Sobre 10"]:
@@ -519,7 +515,7 @@ elif st.session_state.page == 11:
 
     st.pyplot(fig)
 
-    # 5) Interpretación usando la puntuación total real
+    # Interpretación usando la puntuación total real
     total_real = sum(scores.values()) 
     
     st.write("### Interpretación del resultado")
